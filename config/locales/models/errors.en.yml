@@ -1,0 +1,14 @@
+en:
+  model:
+    errors:
+      user:
+        name:
+          blank: 'The title cannot be blank'
+          invalid: 'Укажите имя, используя буквы, цифры или символ подчёркивания'
+        email:
+          blank: 'The title cannot be blank'
+        password:
+          blank: 'The password cannot be blank'
+      user_session:
+        uuid:
+          blank: 'The uuid cannot be blank'
