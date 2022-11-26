@@ -3,16 +3,21 @@
 require 'json'
 
 channel = RabbitMq.consumer_channel
+exchange = channel.default_exchange
 queue = channel.queue('authorization', durable: true)
 
-queue.subscribe(manual_ack: true) do |delivery_info, _properties, payload|
+queue.subscribe(manual_ack: true) do |delivery_info, properties, payload|
   payload = JSON(payload)
-  decode = JwtEncoder.decode(payload['jwt']) rescue nil
+  decode = JwtEncoder.decode(payload['token']) rescue {}
 
   if decode.present?
-    client = AdsService::Rmq::Client.fetch
-    client.authorization(decode['uuid'])
-  end
+    result = Auth::FetchUserService.call(decode['uuid'])
+    data = result.success? ? { user_id: result.user.id }.to_json : ''
 
-  channel.ack(delivery_info.delivery_tag)
+    exchange.publish(
+      data,
+      routing_key: properties.reply_to,
+      correlation_id: properties.correlation_id
+    )
+  end
 end

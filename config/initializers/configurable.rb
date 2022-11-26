@@ -3,6 +3,10 @@
 class Configurable
   extend Dry::Configurable
 
+  setting :app do
+    setting :name, default: 'auth'
+  end
+
   setting :i18n do
     setting :default_locale, default: :ru
     setting :available_locales, default: %i[en ru]

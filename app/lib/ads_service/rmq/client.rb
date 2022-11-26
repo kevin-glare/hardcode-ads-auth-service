@@ -1,15 +1,13 @@
-# frozen_string_literal: true
-
 require 'securerandom'
 require_relative 'api'
 
 module AdsService
   module Rmq
     class Client
-      include Api
       extend Dry::Initializer[undefined: false]
+      include Api
 
-      option :queue, default: proc { create_queque }
+      option :queue, default: proc { create_queue }
       option :reply_queue, default: proc { create_reply_queue }
       option :lock, default: proc { Mutex.new }
       option :condition, default: proc { ConditionVariable.new }
@@ -19,7 +17,7 @@ module AdsService
       end
 
       def start
-        @reply_queue.subscribe do |_delivery_info, properties, _payload|
+        @reply_queue.subscribe do |delivery_info, properties, payload|
           if properties[:correlation_id] == @correlation_id
             @lock.synchronize { @condition.signal }
           end
@@ -32,14 +30,14 @@ module AdsService
 
       attr_writer :correlation_id
 
-      def create_queque
+      def create_queue
         channel = RabbitMq.channel
         channel.queue('ads', durable: true)
       end
 
       def create_reply_queue
         channel = RabbitMq.channel
-        channel.queue('amq.rabbitmq.reply-to', durable: true)
+        channel.queue('amq.rabbitmq.reply-to')
       end
 
       def publish(payload, opts = {})
