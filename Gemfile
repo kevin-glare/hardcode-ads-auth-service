@@ -25,6 +25,8 @@ gem 'dry-configurable', '~> 0.15.0'
 
 gem 'jwt', '~> 2.5.0'
 
+gem 'bunny', '~> 2.19.0'
+
 gem 'dotenv', '~> 2.8.1', groups: [:development, :test], require: 'dotenv/load'
 
 group :test do
