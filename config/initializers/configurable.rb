@@ -27,6 +27,11 @@ class Configurable
   setting :rabbit_mq do
     setting :consumer_pool, default: ENV.fetch('RABBIT_MQ_CONSUMER_POOL', 2)
   end
+
+  setting :logger do
+    setting :path, default: 'log/app.log'
+    setting :level, default: 'info'
+  end
 end
 
 AppSetting = Configurable.config.freeze
