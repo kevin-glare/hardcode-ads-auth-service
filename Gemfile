@@ -27,6 +27,14 @@ gem 'jwt', '~> 2.5.0'
 
 gem 'bunny', '~> 2.19.0'
 
+gem 'faraday', '~> 1.10.2'
+gem 'faraday_middleware', '~> 1.2.0'
+
+gem 'rack-ougai', '~> 0.3.0'
+gem 'amazing_print', '~> 1.4.0'
+
+gem 'rack-request-id', '~> 0.0.4'
+
 gem 'dotenv', '~> 2.8.1', groups: [:development, :test], require: 'dotenv/load'
 
 group :test do
